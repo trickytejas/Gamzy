@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Withdraw</title>
+  <link rel="stylesheet" href="/login.css">
+  <style>
+    /* CSS goes here */
+   input[type="text"],input[type="number"]{
+    width: 95%;
+   }
+   form{
+    height: 275px;
+    width: 320px;
+   }
+   form div {
+    width: calc(85% + 10px);
+    }label{
+      font-size: 18px;
+    }
+    
+  </style>
+</head>
+<body>
+  <h1 class="head" style="text-decoration: none;">
+    <img src="/icons/logo.png" alt="" width="55px">&nbsp; Gamzy
+ </h1>
+ 
+   
+    <form id="withdraw-form" action="/auth/withdraw-request" method="POST">
+      <h2 class="form-head">Withdraw Funds</h2>
+      <div>
+        <label for="upi">Enter UPI ID</label>
+        <input type="text" name="upi" id="upi" placeholder="Enter UPI ID" required>
+      </div>
+       <div>
+        <label for="amount">Enter Amount to Withdraw</label>
+        <input type="number" name="amount" id="amount" placeholder="Enter Amount" required>
+       </div>
+       
+        <button type="submit">Submit</button>
+        <!-- <p class="error-message" id="error-message"></p> -->
+    </form>
+ 
+
+  <script>
+   document.getElementById('withdraw-form').addEventListener('submit', async function(event) {
+        event.preventDefault(); // Prevent the default form submission
+        
+        const upi = document.getElementById('upi').value;
+        const amount = document.getElementById('amount').value;
+        
+        try {
+            const response = await fetch('/auth/withdraw-request', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ upi, amount })
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                if (result.success) {
+                    alert('Withdraw Request Submitted');
+                    window.location.href = '/'; // Redirect to home page
+                } else {
+                    alert('Insufficient Balance');
+                }
+            } else {
+                alert('An error occurred: ' + (result.message || 'Unknown error'));
+            }
+        } catch (error) {
+            console.error('Error submitting transaction:', error);
+            alert('An unexpected error occurred.');
+        }
+    });
+  </script>
+</body>
+</html>

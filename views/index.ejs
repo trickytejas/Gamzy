@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+    <!-- <script src="https://cdn.tailwindcss.com"></script> -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gamzy</title>
+    <link rel="stylesheet" href="/index.css">
+    <style>
+        @media screen and (max-width:1000px) {
+            .l-nav{
+                width: 35vw;
+            }
+            .r-nav{
+                width: 75vw;
+            }
+        }
+        @media screen and (max-width:700px) {
+           #menu{
+            display: none;
+            padding: 0 8px;
+           }
+           .nav{
+            width: 95vw;
+            margin-top: 10px;
+            border-radius: 20px;
+            border: 1px solid black;
+           }
+           .l-nav{
+            width: 50vw;
+            justify-content: center;
+           }
+           .r-nav{
+              width: 40vw; 
+           }
+           .c-head{
+            font-size: 20px;
+           }
+           .p-pop{
+            width: 60%;
+           }
+           .money{
+            font-size: 20px;
+            width: 65px;
+           }
+           .coin-head{
+            width: 65%;
+           }
+           .plans p{
+            font-size: 14px;
+           }
+           .n1{
+            display: none;
+           }
+           .n2{
+            display: flex;
+           }
+           #withdraw-btn{
+            font-size: 12px;
+           }
+           .coin-head p{
+            font-size: 13px;
+           }
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <div id="menu">
+            <iframe style="width:40px; height:40px;border: none;" src="/icons/menu.svg" class="svg-icon" aria-label="Description of icon" >
+
+            </iframe>
+        </div>
+        <div class="l-nav">
+         <img src="/icons/logo.png" alt="" width="30px">&nbsp; Gamzy
+        </div>
+        <div class="r-nav">
+            <div class="n-list n1">
+                <div class="nav-item" data-target="casino"><a href="#">Casino</a></div>
+                <div class="nav-item" data-target="arena"><a href="#">Arena</a></div>
+                <div class="nav-item" data-target="fantasy"><a href="#">Fantasy 11</a></div>
+            </div>
+              <% if (!user) { %>
+                  <div><a href="/auth/login">Login</a></div>
+              <% } else { %>   
+                     <div class="showmenu">
+                        <button class="menu-btn coin-btn" onclick="purchasemenu(1)" >
+                            <img src="/icons/coin.gif" alt="Your GIF" class="gif-overlay" width="30px"><%=user.money %>
+                           </button>&nbsp;&nbsp;&nbsp;
+                        <button class="menu-btn" onclick="showprofile(1)">
+                            <img src="/icons/profile.gif" alt="Your GIF" class="gif-overlay" width="32px">
+                        </button>
+                    </div>
+              <% } %>
+  
+          
+        </div>
+      </nav>
+        
+      <% if (user) { %>
+        <div id="overlay">
+            <div id="content">
+                <div class="stclose">
+                    <button class="clm" style="background-color:#ffa27f00;" onclick="showprofile(2)">
+                      <span class="money-need" style="font-size: 26px"> close </span>
+                    </button>
+                  </div>
+               <div class="c-head">
+
+                 <div class="p-pop">
+                    <img src="/icons/profile.gif" alt="Your GIF" class="gif-overlay" width="40px">
+                    &nbsp;&nbsp;<%= user.name.split(' ')[0] %>
+                 </div>
+                    
+                
+                <div class="money">
+                    <p>$<%= user.money %></p>
+                       </div>
+               </div>
+              
+               <div class="p-options">
+                 <div class="p-profile">
+                    <img src="/icons/profile.gif" alt="Your GIF" class="gif-overlay" width="32px">&nbsp;&nbsp;<button>Edit Profile</button>
+                 </div>
+                 <div class="history">
+                    <span class="money-need">
+                        list
+                        </span>&nbsp;&nbsp;<button>Transaction History</button>
+                 </div>
+                 <div class="term">
+                    <img src="/icons/term.gif" alt="Your GIF" class="gif-overlay" width="32px">&nbsp;&nbsp;<button>Term and Conditions</button>
+                 </div>
+                 <div class="contact">
+                    <span class="money-need">
+                        contact_support
+                        </span>&nbsp;&nbsp;<button>Contact Us</button>
+                 </div>
+                 <div class="logout">
+                    <span class="money-need">
+                        logout
+                        </span>&nbsp;&nbsp;<button><a style="font-size: 16px;" href="/auth/logout">Logout</a></button>
+                </div>
+               </div>
+               
+
+            </div>
+            <div id="coin-o">
+                <div class="stclose">
+                    <button class="clm" style="background-color:#ffa27f00;" onclick="purchasemenu(2)">
+                      <span class="money-need" style="font-size: 26px"> close </span>
+                    </button>
+                  </div>
+                  <div class="coin-head">
+                    
+                    <p style="height: 100%;display: flex; align-items: center;">
+                      <b>Your Balance :</b><img src="/icons/coin.gif" alt="Your GIF" class="gif-overlay" width="30px">
+                        <%=user.money%>
+                    </p>
+                    <form action="/auth/withdraw" method="get">
+                      <button type="submit" class="btn" id="withdraw-btn" style="padding: 8px 10px;">
+                        Withdraw
+                      </button>
+                    </form>
+                  </div>
+                  <form action="/auth/purchase" method="POST" class="p-plans">
+                    <div class="plans">
+                        <div class="plan1">
+                            <input type="radio" id="plan1" name="plan" value="20">
+                            <label for="plan1">
+                                <p>Rs.20</p>
+                                <p><img src="/icons/coin.gif" alt="Your GIF" class="gif-overlay" width="36px">20</p>
+                            </label>
+                        </div>
+                        <div class="plan2">
+                            <input type="radio" id="plan2" name="plan" value="50">
+                            <label for="plan2">
+                                <p>Rs.50</p>
+                                <p><img src="/icons/coin.gif" alt="Your GIF" class="gif-overlay" width="36px">55</p>
+                            </label>
+                        </div>
+                        <div class="plan3">
+                            <input type="radio" id="plan3" name="plan" value="100">
+                            <label for="plan3">
+                                <p>Rs.100</p>
+                                <p><img src="/icons/coin.gif" alt="Your GIF" class="gif-overlay" width="36px">110</p>
+                            </label>
+                        </div>
+                        <div class="plan4">
+                            <input type="radio" id="plan4" name="plan" value="200">
+                            <label for="plan4">
+                                <p>Rs.200</p>
+                                <p><img src="/icons/coin.gif" alt="Your GIF" class="gif-overlay" width="36px">230</p>
+                            </label>
+                        </div>
+                        <div class="plan5">
+                            <input type="radio" id="plan5" name="plan" value="250">
+                            <label for="plan5">
+                                <p>Rs.250</p>
+                                <p><img src="/icons/coin.gif" alt="Your GIF" class="gif-overlay" width="36px">295</p>
+                            </label>
+                        </div>
+                        <div class="plan6">
+                            <input type="radio" id="plan6" name="plan" value="500">
+                            <label for="plan6">
+                                <p>Rs.500</p>
+                                <p><img src="/icons/coin.gif" alt="Your GIF" class="gif-overlay" width="36px">600</p>
+                            </label>
+                        </div>
+                        <div class="plan7">
+                            <input type="radio" id="plan7" name="plan" value="750">
+                            <label for="plan7">
+                                <p>Rs.750</p>
+                                <p><img src="/icons/coin.gif" alt="Your GIF" class="gif-overlay" width="36px">900</p>
+                            </label>
+                        </div>
+                        <div class="plan8">
+                            <input type="radio" id="plan8" name="plan" value="1000">
+                            <label for="plan8">
+                                <p>Rs.1000</p>
+                                <p><img src="/icons/coin.gif" alt="Your GIF" class="gif-overlay" width="36px">1250</p>
+                            </label>
+                        </div>
+                        <div class="plan9">
+                            <input type="radio" id="plan9" name="plan" value="2000">
+                            <label for="plan9">
+                                <p>Rs.2000</p>
+                                <p><img src="/icons/coin.gif" alt="Your GIF" class="gif-overlay" width="36px">2600</p>
+                            </label>
+                        </div>
+                    </div>
+                
+                    <button type="submit" class="btn">BUY</button>
+                </form>
+                
+            </div>
+       </div>
+    <% }  %>  
+         
+    <div class="n-list n2">
+        <div class="nav-item" data-target="casino"><a href="#">Casino</a></div>
+        <div class="nav-item" data-target="arena"><a href="#">Arena</a></div>
+        <div class="nav-item" data-target="fantasy"><a href="#">Fantasy 11</a></div>
+    </div>
+    
+    <div class="content">
+        <div class="game-content casino"> <div class="card2">
+        Content for Casino 1</div></div>
+        <div class="game-content casino"> <div class="card2">
+        Content for Casino 2</div></div>
+        <div class="game-content arena"> <div class="card2">
+        Content for Arena 1</div></div>
+        <div class="game-content arena"> <div class="card2">
+        Content for Arena 2</div></div>
+        <div class="game-content fantasy"> <div class="card2">
+        Content for Fantasy11</div></div>
+      
+    </div>
+
+
+    <!-- <h1>
+        <% if (!user) { %>
+            Login For Welcome
+        <% } else { %>
+            Welcome to the Home Page,<%= user.name %>
+        <% } %>
+
+       
+    </h1>  -->
+
+
+
+   <script>
+  function showprofile(n){
+    let o=document.getElementById("overlay")
+    let c=document.getElementById("content");
+    if(n===1){
+        o.style.display = "flex";
+        c.style.display = "flex";
+        // Trigger a reflow to ensure the browser notices the change
+        c.offsetHeight; // This forces a reflow
+        c.style.height = "60vh";
+    }
+    else{
+        c.style.height = "0vh";
+        setTimeout(() => {
+            o.style.display = "none";
+            c.style.display = "none";
+        }, 500); // Delay matches the transition duration
+    }
+
+ 
+}
+  function purchasemenu(n){
+    let o=document.getElementById("overlay")
+    let c=document.getElementById("coin-o");
+    if (n === 1) {
+    o.style.display = "flex";
+    c.style.display = "flex";
+    // Trigger a reflow to ensure the browser notices the change
+    c.offsetHeight; // This forces a reflow
+    // Check screen width
+    if (window.innerWidth < 700) {
+        c.style.height = "60vh";
+    } else {
+        c.style.height = "70vh";
+    }
+    
+}
+    else{
+        c.style.height = "0vh";
+        setTimeout(() => {
+            o.style.display = "none";
+            c.style.display = "none";
+        }, 500); // Delay matches the transition duration
+    }
+  }
+  // JavaScript to handle the radio button selection and change the background color of the parent div
+document.querySelectorAll('.plans input[type="radio"]').forEach(function(radio) {
+  radio.addEventListener('change', function() {
+    document.querySelectorAll('.plans div').forEach(function(div) {
+      div.style.backgroundColor = '#080312'; // Reset all divs
+    });
+    if (this.checked) {
+      this.parentElement.style.background = 'linear-gradient(-45deg, #282828, #7e03aa, #00fffb);'; // Change background of parent div
+    }
+  });
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    const navItems = document.querySelectorAll('.nav-item');
+    const gameContents = document.querySelectorAll('.game-content');
+
+    navItems.forEach(item => {
+        item.addEventListener('click', function() {
+            const targetClass = this.getAttribute('data-target');
+
+            // Remove 'active' class from all content
+            gameContents.forEach(content => {
+                if (content.classList.contains(targetClass)) {
+                    content.classList.add('active');
+                } else {
+                    content.classList.remove('active');
+                }
+            });
+            // Remove 'active' class from all nav items
+            navItems.forEach(nav => nav.classList.remove('active'));
+
+            // Add 'active' class to the clicked nav item
+            this.classList.add('active');
+        });
+    });
+});
+
+   </script>
+  
+
+</body>
+</html>

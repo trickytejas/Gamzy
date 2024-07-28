@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/login.css">
+    <title>Register</title>
+    <style>
+        form{
+            height: 425px;
+            justify-content: space-evenly;
+        }
+    </style>
+</head>
+<body>
+    <h1 class="head" style="text-decoration: none;">
+        <img src="/icons/logo.png" alt="" width="55px">&nbsp; Gamzy
+     </h1>
+
+    
+
+    <form id="registerForm" action="/auth/register" method="POST">
+        <h1 class="form-head">Register</h1>
+        <div>
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required>
+            <span id="nameError" class="error-message"></span>
+        </div>
+        <div>
+            <label for="phone">Phone:</label>
+            <input type="tel" id="phone" name="phone" required pattern="[0-9]{10}" inputmode="numeric">
+            <span id="phoneError" class="error-message"></span>
+        </div>
+        <div>
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+            <span id="emailError" class="error-message"></span>
+        </div>
+        <div>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+            <span id="passwordError" class="error-message"></span>             
+        </div>
+        <div style="display: flex;margin-bottom: 8px;">
+            <input type="checkbox" id="terms" required>
+            <label style="font-size: 15px;">
+                &nbsp; I accept the 
+                <a href="/pdf/terms.pdf" style="border: none;">
+                  Terms and Conditions
+                </a>
+              </label></div>
+        <button type="submit">Register</button>
+        <p>Already have an account? <a href="/auth/login">Sign In</a></p>
+    </form>
+    
+    <script>
+        document.getElementById('registerForm').addEventListener('submit', function (e) {
+    e.preventDefault(); // Prevent form submission
+    let isValid = true;
+
+    // Full name validation (first name and last name with only one space)
+const nameInput = document.getElementById('name');
+const nameError = document.getElementById('nameError');
+const specialCharacterPattern = /[^a-zA-Z\s]/; // Pattern to check for special characters
+
+if (nameInput.value.length > 15) {
+    nameError.style.display = "block";
+    nameError.textContent = "Name must not exceed 15 characters.";
+    isValid = false;
+} else if (specialCharacterPattern.test(nameInput.value)) {
+    nameError.style.display = "block";
+    nameError.textContent = "Must not have characters or numbers.";
+    isValid = false;
+} else {
+    nameError.style.display = "none";
+    nameError.textContent = "";
+}
+
+
+    // Phone number validation (only numbers, exactly 10 digits)
+    const phoneInput = document.getElementById('phone');
+    const phoneError = document.getElementById('phoneError');
+    const phonePattern = /^[0-9]{10}$/;
+    if (!phonePattern.test(phoneInput.value)) {
+        phoneError.style.display="block";
+        phoneError.textContent = "Please enter a valid 10-digit phone number.";
+        isValid = false;
+    } else {
+        phoneError.style.display="none";
+        phoneError.textContent = "";
+    }
+
+    // Email validation (no spaces and ends with "@gmail.com")
+    const emailInput = document.getElementById('email');
+    const emailError = document.getElementById('emailError');
+    const emailPattern = /^[^\s@]+@gmail\.com$/;
+    if (emailInput.value.length > 35) {
+        emailError.style.display="block";
+        emailError.textContent = "Email must not exceed 15 characters.";
+        isValid = false;
+    } else if (!emailPattern.test(emailInput.value)) {
+        emailError.style.display="block";
+        emailError.textContent = "Please enter a valid Gmail only.";
+        isValid = false;
+    } else {
+        emailError.style.display="none";
+        emailError.textContent = "";
+    }
+
+    // Password validation (minimum length 5)
+    const passwordInput = document.getElementById('password');
+    const passwordError = document.getElementById('passwordError');
+    if (passwordInput.value.length > 15) {
+        passwordError.style.display="block";
+        passwordError.textContent = "Password must not exceed 15 characters.";
+        isValid = false;
+    } else if (passwordInput.value.length < 5) {
+        passwordError.style.display="block";
+        passwordError.textContent = "Password must be at least 5 characters long.";
+        isValid = false;
+    } else {
+        passwordError.style.display="none";
+        passwordError.textContent = "";
+    }
+
+    // If all fields are valid, submit the form
+    if (isValid) {
+        document.getElementById('registerForm').submit();
+    }
+});
+
+    </script>
+    
+</body>
+</html>

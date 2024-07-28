@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/login.css">
+    <title>Login</title>
+</head>
+<body>
+     <h1 class="head" style="text-decoration: none;">
+        <img src="/icons/logo.png" alt="" width="55px">&nbsp; Gamzy
+     </h1>
+    <form id="loginForm" action="/auth/login" method="POST">
+        <h1 class="form-head">Login</h1>
+        <div>
+            <label for="email">Email:</label>
+        <input type="text" id="email" name="email" required>
+        <span id="emailError" class="error-message"></span>
+        </div>
+        <div>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+        </div>
+        <button type="submit">Login</button>
+
+        <p>Don't have an account? <a href="/auth/register">Sign Up</a></p>
+    </form>
+    
+  <script>
+     document.getElementById('loginForm').addEventListener('submit', function (e) {
+    e.preventDefault(); // Prevent form submission
+    let isValid = true;
+     
+    // Email validation (no spaces and ends with "@gmail.com")
+    const emailInput = document.getElementById('email');
+    const emailError = document.getElementById('emailError');
+    const emailPattern = /^[^\s@]+@gmail\.com$/;
+    if (emailInput.value.length > 35) {
+        emailError.style.display="block";
+        emailError.textContent = "Email must not exceed 15 characters.";
+        isValid = false;
+    } else if (!emailPattern.test(emailInput.value)) {
+        emailError.style.display="block";
+        emailError.textContent = "Please enter a valid Gmail only.";
+        isValid = false;
+    } else {
+        emailError.style.display="none";
+        emailError.textContent = "";
+    }
+    
+    if (isValid) {
+        document.getElementById('loginForm').submit();
+    }
+
+     });
+  </script>
+
+</body>
+</html>

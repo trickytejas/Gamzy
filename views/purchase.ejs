@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Purchase Plan</title>
+    <link rel="stylesheet" href="/purchase.css" />
+    <style>
+      /* Styles for the modal */
+      .modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        color: white;
+        display: none;
+        justify-content: center;
+        align-items: center;
+        font-size: 16px;
+        font-weight: bold;
+        background-color: rgb(149 149 149 / 50%);
+      }
+      .modal-content {
+        position: relative;
+    background-color: #fefefe00;
+    
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+      }
+      .modal-footer {
+        text-align: center;
+      }
+      form{
+        width: 310px;
+        height: 475px;
+      }
+      .form-head{
+        font-size: 24px;
+      }
+      form div {
+    width: calc(85% + 10px);
+    }label{
+      font-size: 16px;
+    }
+    input[type="text"],input[type="number"],input[type="datetime-local"]{
+    width: 95%;
+   }
+   .grayed{
+    background: gray;
+   }
+   .grayed:hover{
+    background: gray;
+    box-shadow: none;
+   }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Gamzy</h1>
+      <div class="img-back">
+        <img src="<%= qrImage %>" alt="QR Code for <%= plan %>" />
+      </div>
+      <p>Scan to Pay: Rs.<%= plan %></p>
+      <button class="purchase--btn" id="continueButton">Continue</button>
+    </div>
+
+    <!-- The Modal -->
+    <div id="upiModal" class="modal">
+      <div class="modal-content">
+       
+
+        <form id="upiForm" action="/auth/purchase-request" method="POST">
+            <h2 class="form-head">Enter Details of Transaction</h2>
+          <div>
+            <label for="upiTransactionNumber">UPI Transaction Number:</label>
+            <input
+              type="text"
+              id="upiTransactionNumber"
+              name="upiTransactionNumber"
+              required
+            />
+          </div>
+          <div>
+            <label for="upiSenderName">Name of Sender (as per UPI ID):</label>
+            <input
+              type="text"
+              id="upiSenderName"
+              name="upiSenderName"
+              required
+            />
+          </div>
+          <div>
+            <label for="transactionDateTime">Date and Time:</label>
+            <input
+              type="datetime-local"
+              id="transactionDateTime"
+              name="transactionDateTime"
+              required
+            />
+          </div>
+          <!-- Hidden input field to store the plan amount -->
+          <input type="hidden" name="plan" value="<%= plan %>" />
+          <div class="modal-footer">
+            <button class="purchase--btn grayed" type="submit" id="submitDetails" disabled>
+              Submit
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <script>
+      // JavaScript to handle the modal and wait time
+      document
+        .getElementById("upiForm")
+        .addEventListener("submit", async function (event) {
+          event.preventDefault(); // Prevent the default form submission
+
+          try {
+            const response = await fetch("/auth/purchase-request", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                upiTransactionNumber: document.getElementById(
+                  "upiTransactionNumber"
+                ).value,
+                upiSenderName: document.getElementById("upiSenderName").value,
+                transactionDateTime: document.getElementById(
+                  "transactionDateTime"
+                ).value,
+                plan: document.getElementsByName("plan")[0].value,
+              }),
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+              if (result.success) {
+                alert("Transaction successfully!");
+                window.location.href = "/"; // Redirect to home page
+              } else {
+                alert("Transaction details invalid.");
+              }
+            } else {
+              alert(
+                "An error occurred: " + (result.message || "Unknown error")
+              );
+            }
+          } catch (error) {
+            console.error("Error submitting transaction:", error);
+            alert("An unexpected error occurred.");
+          }
+        });
+
+      document.getElementById("continueButton").onclick = function () {
+        var modal = document.getElementById("upiModal");
+        var submitButton = document.getElementById("submitDetails");
+        modal.style.display = "flex";
+        // Enable the submit button after 30 seconds
+        setTimeout(function () {
+          submitButton.disabled = false;
+          submitButton.classList.remove('grayed');
+        }, 30000);
+      };
+
+      // Close the modal when clicking outside of it
+    //   window.onclick = function (event) {
+    //     var modal = document.getElementById("upiModal");
+    //     if (event.target === modal) {
+    //       modal.style.display = "none";
+    //     }
+    //   };
+    </script>
+  </body>
+</html>
